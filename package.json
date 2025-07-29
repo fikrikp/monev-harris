@@ -7,9 +7,7 @@
     },
     "devDependencies": {
         "axios": "^1.6.4",
-        "laravel-vite-plugin": "^1.0.0",
-        "tailwindcss": "^4.1.10",
-        "vite": "^7.0.6"
+        "tailwindcss": "^4.1.10"
     },
     "name": "haris",
     "version": "1.0.0",
@@ -21,7 +19,7 @@
     "dependencies": {
         "asynckit": "^0.4.0",
         "call-bind-apply-helpers": "^1.0.2",
-        "chartjs-plugin-annotation": "^1.0.0",
+        "chartjs-plugin-annotation": "^2.2.1",
         "combined-stream": "^1.0.8",
         "delayed-stream": "^1.0.0",
         "dunder-proto": "^1.0.1",
@@ -39,6 +37,7 @@
         "has-symbols": "^1.1.0",
         "has-tostringtag": "^1.0.2",
         "hasown": "^2.0.2",
+        "laravel-vite-plugin": "^1.0.0",
         "math-intrinsics": "^1.1.0",
         "mime-db": "^1.52.0",
         "mime-types": "^2.1.35",
@@ -49,6 +48,7 @@
         "proxy-from-env": "^1.1.0",
         "rollup": "^4.44.0",
         "source-map-js": "^1.2.1",
+        "vite": "^7.0.6",
         "vite-plugin-full-reload": "^1.2.0"
     },
     "keywords": [],

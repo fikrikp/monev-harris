@@ -5,7 +5,7 @@ namespace App\Filament\Widgets;
 use App\Models\Barang;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Js; // Pastikan ini diimpor!
+use Illuminate\Support\Js; // Ini tidak diperlukan di sini!
 
 class BarangChartMeetingRoom extends ChartWidget
 {
@@ -83,7 +83,17 @@ class BarangChartMeetingRoom extends ChartWidget
 
         $thresholdValue = max(1, round($totalMeetingRoomItems * 0.20));
 
+        // Logging PHP untuk debugging
         Log::info('Chart Options Generated:', ['thresholdValue' => $thresholdValue, 'totalItems' => $totalMeetingRoomItems]);
+
+        // Ambil data untuk menentukan max Y-axis
+        $data = $this->getData();
+        $allDataValues = array_merge($data['datasets'][0]['data'], $data['datasets'][1]['data']);
+        $maxYValue = !empty($allDataValues) ? max($allDataValues) : 0; // Pastikan tidak kosong
+
+        // Tentukan max Y-axis agar garis threshold terlihat
+        // Ambil nilai terbesar antara data tertinggi dan threshold, lalu tambahkan sedikit margin
+        $chartMaxY = max($maxYValue, $thresholdValue) + 2; // +2 untuk sedikit ruang di atas garis
 
         $options = [
             'responsive' => true,
@@ -95,13 +105,13 @@ class BarangChartMeetingRoom extends ChartWidget
                 ],
                 'annotation' => [
                     'annotations' => [
-                        'thresholdLine' => [
+                        'thresholdLine' => [ // Menggunakan nama yang lebih deskriptif
                             'type' => 'line',
-                            'yMin' => $thresholdValue,
-                            'yMax' => $thresholdValue,
-                            'borderColor' => 'rgba(0,0,0,0.7)',
+                            'scaleID' => 'y',
+                            'value' => $thresholdValue, // Menggunakan nilai yang dihitung
+                            'borderColor' => '#FFC107',
                             'borderWidth' => 2,
-                            'borderDash' => [5, 5],
+                            'borderDash' => [6, 6], // Garis putus-putus
                             'label' => [
                                 'content' => 'Batas Kerusakan (20% dari Barang Meeting Room: ' . $thresholdValue . ')',
                                 'enabled' => true,
@@ -114,19 +124,8 @@ class BarangChartMeetingRoom extends ChartWidget
                         ],
                     ],
                 ],
-                // ✅ PERBAIKAN: Ubah menjadi \Illuminate\Support\Js::from() dan HAPUS 'new'
-                'afterDraw' => \Illuminate\Support\Js::from("
-                    function(chart) {
-                        console.log('Chart rendered! Options:', chart.options);
-                        console.log('Chart plugins:', chart.options.plugins);
-                        if (chart.options.plugins && chart.options.plugins.annotation) {
-                            console.log('Annotation plugin detected in options:', chart.options.plugins.annotation);
-                        } else {
-                            console.log('Annotation plugin NOT found in options!');
-                        }
-                        console.log('Threshold Value passed:', " . $thresholdValue . ");
-                    }
-                "),
+                // HAPUS BLOK afterDraw INI DARI SINI
+                // 'afterDraw' => \Illuminate\Support\Js::from(" ... "),
             ],
             'scales' => [
                 'x' => [
@@ -137,7 +136,7 @@ class BarangChartMeetingRoom extends ChartWidget
                     'title' => ['display' => true, 'text' => 'Jumlah Barang'],
                     'ticks' => ['beginAtZero' => true, 'color' => '#000'],
                     'min' => 0,
-                    'max' => 5,
+                    'max' => $chartMaxY, // Menggunakan nilai max Y yang dihitung
                 ],
             ],
             'aspectRatio' => 2,
